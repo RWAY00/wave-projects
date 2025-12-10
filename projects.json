@@ -1,37 +1,75 @@
 [
   {
-    "id": "proj-001",
-    "title": "Entangled Cinematic Style — Demo",
-    "description": "Signature image style for WAVE documentary thumbnails.",
-    "thumbnail": "images/thumb-sample.jpg",
-    "playUrl": "https://www.youtube.com/",
-    "duration": "3:24",
+    "id": "agi-result-20251210-01",
+    "title": "AGI Test — संकेत संकेत (हिंट)",
+    "description": "AGI टेस्ट: संक्षेप और संकेत — सुरक्षा कारणों से पूर्ण डाटा आर्टिफैक्ट में उपलब्ध है।",
+    "thumbnail": "images/agi-thumb-20251210.jpg",
+    "playUrl": "",
+    "duration": "",
     "tags": [
-      "visual",
-      "style",
-      "thumbnail"
+      "agi",
+      "hint",
+      "result",
+      "2025"
     ],
+    "timestamp": "2025-12-10T21:30:00+05:30",
+    "version": "v0.1",
+    "artifactPath": "/artifacts/agi-run-20251210-001.json",
     "settings": {
       "visibility": "public",
-      "allowComments": true,
-      "featured": true
+      "sensitivity": "low",
+      "notes": "यह केवल संकेत/प्रेक्षण साझा करता है, raw logs आर्टिफैक्ट में।"
     }
   },
   {
-    "id": "proj-002",
-    "title": "AGI Emergence Log — Intro",
-    "description": "Short overview and project plan.",
-    "thumbnail": "images/thumb-sample.jpg",
-    "playUrl": "",
-    "duration": "7:12",
+    "id": "agi-video-20251209-01",
+    "title": "AGI Experiment — Visual Summary (30s)",
+    "description": "30s visual summary of AGI test outcomes. Full results in artifact JSON.",
+    "thumbnail": "images/agi-thumb-20251209.jpg",
+    "playUrl": "videos/agi-20251209-preview.mp4",
+    "duration": "0:30",
     "tags": [
       "agi",
-      "whitepaper"
+      "video",
+      "preview"
     ],
+    "timestamp": "2025-12-09T19:10:00+05:30",
+    "version": "v0.1",
+    "artifactPath": "/artifacts/agi-run-20251209-001.json",
     "settings": {
-      "visibility": "private",
-      "allowComments": false,
-      "featured": false
+      "visibility": "public",
+      "sensitivity": "medium",
+      "notes": "Small preview stored in repo under /videos (keep <10MB)"
+    }
+  },
+  {
+    "id": "agi-run-20251208-03",
+    "title": "AGI Run — Diagnostic Snapshot",
+    "description": "Diagnostic snapshot: short summary shown here. Download full JSON artifact for complete logs and metrics.",
+    "thumbnail": "images/agi-thumb-20251208.jpg",
+    "playUrl": "",
+    "duration": "",
+    "tags": [
+      "agi",
+      "diagnostic",
+      "snapshot",
+      "logs"
+    ],
+    "timestamp": "2025-12-08T04:05:00+05:30",
+    "version": "v0.3",
+    "artifactPath": "/artifacts/agi-run-20251208-03.json",
+    "summary": {
+      "headline": "Model showed stable convergence on task X; subtle drift in latent factor Z.",
+      "signals": [
+        "low-entropy spike at t=120s",
+        "reduced reward variance"
+      ],
+      "confidence": "moderate"
+    },
+    "settings": {
+      "visibility": "public",
+      "sensitivity": "low",
+      "notes": "Artifact includes full metrics and serialized observations."
     }
   }
 ]

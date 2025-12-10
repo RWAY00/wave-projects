@@ -1,0 +1,12 @@
+{
+  "id": "agi-run-20251210-001",
+  "timestamp": "2025-12-10T21:30:00+05:30",
+  "summary": {
+    "headline": "Sample run",
+    "metrics": {
+      "score": 0.87,
+      "loss": 0.12
+    },
+    "notes": "This is a sample artifact."
+  }
+}
