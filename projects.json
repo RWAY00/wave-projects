@@ -1,0 +1,37 @@
+[
+  {
+    "id": "proj-001",
+    "title": "Entangled Cinematic Style — Demo",
+    "description": "Signature image style for WAVE documentary thumbnails.",
+    "thumbnail": "images/thumb-sample.jpg",
+    "playUrl": "https://www.youtube.com/",
+    "duration": "3:24",
+    "tags": [
+      "visual",
+      "style",
+      "thumbnail"
+    ],
+    "settings": {
+      "visibility": "public",
+      "allowComments": true,
+      "featured": true
+    }
+  },
+  {
+    "id": "proj-002",
+    "title": "AGI Emergence Log — Intro",
+    "description": "Short overview and project plan.",
+    "thumbnail": "images/thumb-sample.jpg",
+    "playUrl": "",
+    "duration": "7:12",
+    "tags": [
+      "agi",
+      "whitepaper"
+    ],
+    "settings": {
+      "visibility": "private",
+      "allowComments": false,
+      "featured": false
+    }
+  }
+]

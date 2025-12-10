@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WAVE — Projects (YouTube-style)</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <img src="images/header.jpg" alt="Header image" class="header-img">
+      <div class="brand">
+        <h1>WAVE Projects</h1>
+        <p class="tag">एक जगह — आपके सभी sci-fi और science प्रोजेक्ट्स</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="controls">
+      <input id="search" placeholder="खोजें — प्रोजेक्ट का नाम या टैग..." />
+      <div class="muted">Admin mode: <strong id="adminMode">OFF</strong> — Settings दिखाने के लिए URL में <code>?admin=1</code> जोड़ें</div>
+    </section>
+
+    <section id="grid" class="grid">
+      <!-- project cards loaded by JS -->
+    </section>
+  </main>
+
+  <!-- Settings modal -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button id="closeModal" class="close-btn">✕</button>
+      <h3 id="modalTitle">Settings</h3>
+      <pre id="modalJson" class="json-view"></pre>
+
+      <div class="modal-actions">
+        <a id="editOnGit" target="_blank" rel="noopener" class="btn">Edit on GitHub</a>
+        <button id="downloadJson" class="btn">Download JSON</button>
+      </div>
+
+      <p class="muted small">Note: यह page static है — बदलने के लिए <code>projects.json</code> edit कर के commit करें (GitHub UI से आसान)।</p>
+    </div>
+  </div>
+
+<script>
+(async function(){
+  const ADMIN = new URL(location).searchParams.get('admin') === '1';
+  document.getElementById('adminMode').textContent = ADMIN ? 'ON' : 'OFF';
+
+  const grid = document.getElementById('grid');
+  const search = document.getElementById('search');
+
+  // fetch projects.json
+  async function loadProjects(){
+    try {
+      const r = await fetch('projects.json', {cache:'no-store'});
+      if(!r.ok) throw new Error('projects.json not found');
+      const projects = await r.json();
+      return projects;
+    } catch(e){
+      console.error(e);
+      return [];
+    }
+  }
+
+  function createCard(p){
+    const card = document.createElement('article');
+    card.className = 'card';
+
+    const thumb = document.createElement('div');
+    thumb.className='thumb';
+    thumb.innerHTML = `<img src="${escape(p.thumbnail||'images/thumb-sample.jpg')}" alt="${escape(p.title)}">`;
+
+    const meta = document.createElement('div');
+    meta.className='meta';
+    meta.innerHTML = `<h4>${escape(p.title)}</h4>
+                      <p class="desc">${escape(p.description||'')}</p>
+                      <div class="meta-bottom"><span class="muted small">${escape(p.duration||'—')}</span>
+                      <span class="muted small">${escape(p.tags ? p.tags.join(', '):'')}</span></div>`;
+
+    card.appendChild(thumb);
+    card.appendChild(meta);
+
+    // clicking card opens project (here we just open artifact or placeholder)
+    card.addEventListener('click', (e)=>{
+      // avoid firing when clicking settings button
+      if (e.target.closest('.settings-btn')) return;
+      if (p.playUrl) window.open(p.playUrl, '_blank');
+      else alert('Play URL नहीं मिला — settings में जोड़िये।');
+    });
+
+    // add settings button (visible only in admin mode)
+    if (ADMIN){
+      const sb = document.createElement('button');
+      sb.className='settings-btn';
+      sb.textContent = 'Settings';
+      sb.addEventListener('click', (ev)=>{
+        ev.stopPropagation();
+        openSettingsModal(p);
+      });
+      card.appendChild(sb);
+    }
+
+    return card;
+  }
+
+  function render(projects){
+    grid.innerHTML = '';
+    if (!projects.length) grid.innerHTML = '<div class="muted">कोई प्रोजेक्ट नहीं मिला।</div>';
+    projects.forEach(p => grid.appendChild(createCard(p)));
+  }
+
+  function escape(s){ if (!s && s!==0) return ''; return String(s).replace(/[&<>"']/g, (m)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+  // search filter
+  function filterAndRender(projects){
+    const q = search.value.trim().toLowerCase();
+    if (!q) return render(projects);
+    const filtered = projects.filter(p=>{
+      const hay = (p.title + ' ' + (p.description||'') + ' ' + (p.tags||[]).join(' ')).toLowerCase();
+      return hay.includes(q);
+    });
+    render(filtered);
+  }
+
+  const projects = await loadProjects();
+  render(projects);
+
+  search.addEventListener('input', ()=>filterAndRender(projects));
+
+  // -------- Modal / Settings --------
+  const modal = document.getElementById('modal');
+  const modalJson = document.getElementById('modalJson');
+  const modalTitle = document.getElementById('modalTitle');
+  const editOnGit = document.getElementById('editOnGit');
+  const downloadJson = document.getElementById('downloadJson');
+  const closeModal = document.getElementById('closeModal');
+
+  function openSettingsModal(p){
+    modalJson.textContent = JSON.stringify(p, null, 2);
+    modalTitle.textContent = 'Settings — ' + (p.title || p.id || 'project');
+    // link to GitHub "edit file" — replace with your repo path if desired
+    // We try to link to the raw projects.json edit page on github.com
+    const repo = location.hostname.includes('github.io') ? '/' + location.pathname.split('/')[1] : ''; // best effort
+    // Simpler: build an edit link template (user must change to their repo path)
+    editOnGit.href = `https://github.com/<YOUR-USERNAME>/<YOUR-REPO>/edit/main/projects.json`;
+    downloadJson.onclick = ()=>downloadObj(p, (p.id||p.title||'project') + '.json');
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden','false');
+  }
+
+  function closeSettings(){
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden','true');
+  }
+  closeModal.onclick = closeSettings;
+  modal.onclick = (ev)=>{ if (ev.target === modal) closeSettings(); }
+
+  function downloadObj(o, name){
+    const blob = new Blob([JSON.stringify(o,null,2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = name||'data.json'; a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),3000);
+  }
+})();
+</script>
+</body>
+</html>
