@@ -145,7 +145,7 @@
     // We try to link to the raw projects.json edit page on github.com
     const repo = location.hostname.includes('github.io') ? '/' + location.pathname.split('/')[1] : ''; // best effort
     // Simpler: build an edit link template (user must change to their repo path)
-    editOnGit.href = `https://github.com/<YOUR-USERNAME>/<YOUR-REPO>/edit/main/projects.json`;
+    editOnGit.href = "https://github.com/RWAY00/wave-projects/edit/main/projects.json";
     downloadJson.onclick = ()=>downloadObj(p, (p.id||p.title||'project') + '.json');
     modal.style.display = 'flex';
     modal.setAttribute('aria-hidden','false');
